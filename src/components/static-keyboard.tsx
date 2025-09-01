@@ -26,14 +26,6 @@ export function StaticKeyboard() {
     'G': 'Ab',
     'A': 'Bb',
   };
-  const blackKeyAudio: { [key: string]: string } = {
-    'C': 'C#',
-    'D': 'D#',
-    'F': 'F#',
-    'G': 'G#',
-    'A': 'A#',
-  };
-
 
   const renderOctave = (octaveIndex: number) => {
     const octaveNumber = octaveIndex + 3;
@@ -49,14 +41,13 @@ export function StaticKeyboard() {
             keyLabel = "C3";
           }
 
-
           return (
             <button
               key={noteName}
               onClick={() => playNote(noteName)}
               className={cn(
-                "relative h-32 w-10 border-2 border-muted-foreground bg-white rounded-b-md flex items-end justify-center pb-2 text-xs font-semibold text-gray-600 transition-colors duration-100",
-                "hover:bg-gray-200 active:bg-primary active:text-primary-foreground",
+                "relative h-32 w-10 border-2 border-muted-foreground bg-card rounded-b-md flex items-end justify-center pb-2 text-xs font-semibold text-card-foreground transition-colors duration-100",
+                "hover:bg-muted active:bg-primary active:text-primary-foreground",
                 {
                   "bg-primary text-primary-foreground": isPlaying,
                 }
@@ -68,17 +59,16 @@ export function StaticKeyboard() {
         })}
         {Object.entries(blackKeys).map(([key, blackKeyLabel]) => {
           const whiteKeyIndex = whiteKeys.indexOf(key);
-          const audioNoteName = `${blackKeyAudio[key]}${octaveNumber}`;
           const noteName = `${blackKeyLabel}${octaveNumber}`;
-          const isPlaying = playingNote === audioNoteName;
+          const isPlaying = playingNote === noteName;
 
           return (
             <button
               key={noteName}
-              onClick={() => playNote(audioNoteName)}
+              onClick={() => playNote(noteName)}
               className={cn(
-                "absolute top-0 h-20 w-6 bg-black border-2 border-muted-foreground rounded-b-md z-10 flex items-end justify-center pb-2 text-white text-xs transition-colors duration-100",
-                "hover:bg-gray-700 active:bg-primary active:text-primary-foreground",
+                "absolute top-0 h-20 w-6 bg-foreground border-2 border-muted-foreground rounded-b-md z-10 flex items-end justify-center pb-2 text-background text-xs transition-colors duration-100",
+                "hover:bg-gray-700 active:bg-primary active:border-primary active:text-primary-foreground",
                 {
                   "bg-primary text-primary-foreground border-primary": isPlaying,
                 }
