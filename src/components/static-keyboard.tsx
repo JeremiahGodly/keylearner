@@ -11,9 +11,7 @@ export function StaticKeyboard() {
   
   const playNote = (note: string) => {
     setPlayingNote(note);
-    // Use sharp name for audio file regardless of display
-    const audioNote = note.replace("b", "#");
-    const audio = new Audio(`/audio/notes/${audioNote}.mp3`);
+    const audio = new Audio(`/audio/notes/${note}.mp3`);
     audio.play();
     audio.onended = () => setPlayingNote(null);
   };
@@ -28,7 +26,7 @@ export function StaticKeyboard() {
   };
 
   const renderOctave = (octaveIndex: number) => {
-    const octaveNumber = octaveIndex + 3;
+    const octaveNumber = octaveIndex + 3; // Starts from octave 3
     return (
       <div key={octaveIndex} className="relative flex">
         {whiteKeys.map((key) => {
