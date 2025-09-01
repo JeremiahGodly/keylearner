@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Music, KeyRound, Metronome, ChevronRight } from "lucide-react";
+import { Music, KeyRound, Milestone, ChevronRight } from "lucide-react";
 import Link from "next/link";
 
 const theoryTopics = [
@@ -17,7 +17,7 @@ const theoryTopics = [
     href: "#",
   },
   {
-    icon: Metronome,
+    icon: Milestone,
     title: "Rhythm",
     description: "Grasp the fundamentals of timing in music, from whole notes to eighth notes.",
     href: "#",
