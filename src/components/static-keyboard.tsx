@@ -30,7 +30,7 @@ export function StaticKeyboard() {
           return (
             <div
               key={`${key}${octaveIndex}`}
-              className={`relative h-32 w-10 border-2 border-muted-foreground bg-white rounded-b-md flex items-end justify-center pb-2 text-xs font-semibold text-gray-600 ${isMiddleC ? 'bg-primary/20' : ''}`}
+              className={`relative h-32 w-10 border-2 border-muted-foreground bg-white rounded-b-md flex items-end justify-center pb-2 text-xs font-semibold text-gray-600`}
             >
               {keyLabel}
             </div>
