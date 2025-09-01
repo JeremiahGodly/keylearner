@@ -1,3 +1,4 @@
+
 "use client";
 
 import { usePathname } from "next/navigation";
@@ -16,6 +17,7 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
     "/songs": t("Song Tutorials"),
     "/progress": t("Your Progress"),
     "/resources": t("Resource Library"),
+    "/about": t("About Us"),
   };
 
   const title = pageTitles[pathname] ?? "KeyLearner";

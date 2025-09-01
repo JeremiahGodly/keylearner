@@ -1,3 +1,4 @@
+
 "use client"
 
 import Link from "next/link";
@@ -18,6 +19,7 @@ import {
   BarChart3,
   BookOpen,
   Piano,
+  Info,
 } from "lucide-react";
 import { useI18n } from "@/context/i18n-context";
 
@@ -31,6 +33,7 @@ export function AppSidebar() {
     { href: "/songs", label: t("Song Tutorials"), icon: Guitar },
     { href: "/progress", label: t("Progress"), icon: BarChart3 },
     { href: "/resources", label: t("Resources"), icon: BookOpen },
+    { href: "/about", label: t("About Us"), icon: Info },
   ];
 
   return (
