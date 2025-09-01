@@ -77,7 +77,7 @@ export function StaticKeyboard() {
               key={noteName}
               onClick={() => playNote(audioNoteName)}
               className={cn(
-                "absolute top-0 h-20 w-6 bg-foreground dark:bg-black border-2 border-muted-foreground rounded-b-md z-10 flex items-end justify-center pb-2 text-white text-xs transition-colors duration-100",
+                "absolute top-0 h-20 w-6 bg-black border-2 border-muted-foreground rounded-b-md z-10 flex items-end justify-center pb-2 text-white text-xs transition-colors duration-100",
                 "hover:bg-gray-700 active:bg-primary active:text-primary-foreground",
                 {
                   "bg-primary text-primary-foreground border-primary": isPlaying,
