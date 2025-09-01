@@ -15,7 +15,7 @@ export function StaticKeyboard() {
             <span className="absolute bottom-2 text-xs font-bold text-primary z-20">{t('Middle C')}</span>
           )}
           {Object.prototype.hasOwnProperty.call(blackKeys, key) && (
-            <div className="absolute top-0 left-[-0.6rem] h-20 w-5 bg-foreground border-2 border-muted-foreground rounded-b-md z-10" />
+            <div className="absolute top-0 left-[-0.6rem] h-20 w-5 bg-foreground dark:bg-black border-2 border-muted-foreground rounded-b-md z-10" />
           )}
         </div>
       ))}
