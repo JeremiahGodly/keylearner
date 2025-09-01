@@ -1,39 +1,44 @@
+"use client";
+
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { StaticKeyboard } from "@/components/static-keyboard";
 import { Lightbulb, History, ChevronRight } from "lucide-react";
 import Link from "next/link";
+import { useI18n } from "@/context/i18n-context";
 
 export default function DashboardPage() {
+  const { t } = useI18n();
+
   const learningPath = [
-    { title: "Introduction to C Major Scale", type: "Theory", href: "/theory" },
-    { title: "Your First Chords: C, G, Am, F", type: "Theory", href: "/theory" },
-    { title: "'Twinkle Twinkle Little Star' Tutorial", type: "Song", href: "/songs" },
+    { title: t('Introduction to C Major Scale'), type: t('Theory'), href: "/theory" },
+    { title: t('Your First Chords: C, G, Am, F'), type: t('Theory'), href: "/theory" },
+    { title: t("'Twinkle Twinkle Little Star' Tutorial"), type: t('Song'), href: "/songs" },
   ];
 
   const recentActivity = [
-    { title: "Completed: Basic Posture", score: "100%" },
-    { title: "Practiced: 'Ode to Joy'", duration: "15 min" },
-    { title: "Unlocked: The D Major Scale", achievement: "New Scale!" },
+    { title: t('Completed: Basic Posture'), score: "100%" },
+    { title: t("Practiced: 'Ode to Joy'"), duration: `15 ${t('min')}` },
+    { title: t('Unlocked: The D Major Scale'), achievement: t('New Scale!') },
   ];
 
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Welcome to KeyLearner</h1>
-        <p className="text-muted-foreground">Your journey to mastering the piano starts now.</p>
+        <h1 className="text-3xl font-bold tracking-tight">{t('Welcome to KeyLearner')}</h1>
+        <p className="text-muted-foreground">{t('Your journey to mastering the piano starts now.')}</p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle>Keyboard Fundamentals</CardTitle>
-            <CardDescription>Get comfortable with the keyboard layout and proper hand posture.</CardDescription>
+            <CardTitle>{t('Keyboard Fundamentals')}</CardTitle>
+            <CardDescription>{t('Get comfortable with the keyboard layout and proper hand posture.')}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               <p className="text-sm text-muted-foreground">
-                This is a standard 88-key piano keyboard. The repeating pattern of 12 keys (7 white, 5 black) is called an octave. We'll start with Middle C, the C key closest to the center of the piano.
+                {t('This is a standard 88-key piano keyboard. The repeating pattern of 12 keys (7 white, 5 black) is called an octave. We\'ll start with Middle C, the C key closest to the center of the piano.')}
               </p>
               <StaticKeyboard />
             </div>
@@ -44,9 +49,9 @@ export default function DashboardPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Lightbulb className="text-accent" />
-              Personalized Learning Path
+              {t('Personalized Learning Path')}
             </CardTitle>
-            <CardDescription>AI-powered suggestions to guide your learning journey.</CardDescription>
+            <CardDescription>{t('AI-powered suggestions to guide your learning journey.')}</CardDescription>
           </CardHeader>
           <CardContent>
             <ul className="space-y-4">
@@ -72,9 +77,9 @@ export default function DashboardPage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <History />
-            Recent Activity
+            {t('Recent Activity')}
           </CardTitle>
-          <CardDescription>A look back at your latest accomplishments.</CardDescription>
+          <CardDescription>{t('A look back at your latest accomplishments.')}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">

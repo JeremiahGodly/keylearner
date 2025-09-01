@@ -19,17 +19,19 @@ import {
   BookOpen,
   Piano,
 } from "lucide-react";
-
-const menuItems = [
-  { href: "/", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/theory", label: "Music Theory", icon: Music },
-  { href: "/songs", label: "Song Tutorials", icon: Guitar },
-  { href: "/progress", label: "Progress", icon: BarChart3 },
-  { href: "/resources", label: "Resources", icon: BookOpen },
-];
+import { useI18n } from "@/context/i18n-context";
 
 export function AppSidebar() {
   const pathname = usePathname();
+  const { t } = useI18n();
+
+  const menuItems = [
+    { href: "/", label: t("Dashboard"), icon: LayoutDashboard },
+    { href: "/theory", label: t("Music Theory"), icon: Music },
+    { href: "/songs", label: t("Song Tutorials"), icon: Guitar },
+    { href: "/progress", label: t("Progress"), icon: BarChart3 },
+    { href: "/resources", label: t("Resources"), icon: BookOpen },
+  ];
 
   return (
     <Sidebar>
@@ -43,15 +45,16 @@ export function AppSidebar() {
         <SidebarMenu>
           {menuItems.map((item) => (
             <SidebarMenuItem key={item.href}>
-              <Link href={item.href}>
                 <SidebarMenuButton
+                  asChild
                   isActive={pathname === item.href}
                   tooltip={item.label}
                 >
-                  <item.icon />
-                  <span>{item.label}</span>
+                  <Link href={item.href}>
+                    <item.icon />
+                    <span>{item.label}</span>
+                  </Link>
                 </SidebarMenuButton>
-              </Link>
             </SidebarMenuItem>
           ))}
         </SidebarMenu>

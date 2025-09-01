@@ -1,30 +1,35 @@
+"use client";
+
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Music, KeyRound, Milestone, ChevronRight } from "lucide-react";
 import Link from "next/link";
-
-const theoryTopics = [
-  {
-    icon: Music,
-    title: "Scales",
-    description: "Learn the building blocks of melodies. Understand major and minor scales and how to play them.",
-    href: "#",
-  },
-  {
-    icon: KeyRound,
-    title: "Chords",
-    description: "Discover how to play multiple notes together to create harmony. Start with basic triads.",
-    href: "#",
-  },
-  {
-    icon: Milestone,
-    title: "Rhythm",
-    description: "Grasp the fundamentals of timing in music, from whole notes to eighth notes.",
-    href: "#",
-  },
-];
+import { useI18n } from "@/context/i18n-context";
 
 export default function TheoryPage() {
+  const { t } = useI18n();
+
+  const theoryTopics = [
+    {
+      icon: Music,
+      title: t("Scales"),
+      description: t("Learn the building blocks of melodies. Understand major and minor scales and how to play them."),
+      href: "#",
+    },
+    {
+      icon: KeyRound,
+      title: t("Chords"),
+      description: t("Discover how to play multiple notes together to create harmony. Start with basic triads."),
+      href: "#",
+    },
+    {
+      icon: Milestone,
+      title: t("Rhythm"),
+      description: t("Grasp the fundamentals of timing in music, from whole notes to eighth notes."),
+      href: "#",
+    },
+  ];
+
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       {theoryTopics.map((topic, index) => (
@@ -43,7 +48,7 @@ export default function TheoryPage() {
           <CardFooter>
             <Button asChild variant="outline" className="w-full">
               <Link href={topic.href}>
-                Learn More <ChevronRight className="ml-2 h-4 w-4" />
+                {t("Learn More")} <ChevronRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
           </CardFooter>

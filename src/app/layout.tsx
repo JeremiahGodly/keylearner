@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { LayoutWrapper } from "@/components/layout-wrapper";
+import { I18nProvider } from "@/context/i18n-context";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -24,7 +25,9 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
       </head>
       <body className={`${inter.variable} font-body antialiased`}>
-        <LayoutWrapper>{children}</LayoutWrapper>
+        <I18nProvider>
+          <LayoutWrapper>{children}</LayoutWrapper>
+        </I18nProvider>
         <Toaster />
       </body>
     </html>

@@ -2,31 +2,34 @@
 
 import { Bar, BarChart, CartesianGrid, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis, Legend, Cell } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-
-const weeklyPracticeData = [
-  { day: "Mon", minutes: 15 },
-  { day: "Tue", minutes: 25 },
-  { day: "Wed", minutes: 10 },
-  { day: "Thu", minutes: 30 },
-  { day: "Fri", minutes: 45 },
-  { day: "Sat", minutes: 60 },
-  { day: "Sun", minutes: 20 },
-];
-
-const lessonCompletionData = [
-  { name: "Theory", value: 4, color: "hsl(var(--primary))" },
-  { name: "Songs", value: 2, color: "hsl(var(--accent))" },
-  { name: "Exercises", value: 8, color: "hsl(var(--secondary-foreground))" },
-  { name: "Remaining", value: 25, color: "hsl(var(--muted))" },
-];
+import { useI18n } from "@/context/i18n-context";
 
 export function ProgressCharts() {
+  const { t } = useI18n();
+
+  const weeklyPracticeData = [
+    { day: t("Mon"), minutes: 15 },
+    { day: t("Tue"), minutes: 25 },
+    { day: t("Wed"), minutes: 10 },
+    { day: t("Thu"), minutes: 30 },
+    { day: t("Fri"), minutes: 45 },
+    { day: t("Sat"), minutes: 60 },
+    { day: t("Sun"), minutes: 20 },
+  ];
+
+  const lessonCompletionData = [
+    { name: t("Theory"), value: 4, color: "hsl(var(--primary))" },
+    { name: t("Songs"), value: 2, color: "hsl(var(--accent))" },
+    { name: t("Exercises"), value: 8, color: "hsl(var(--secondary-foreground))" },
+    { name: t("Remaining"), value: 25, color: "hsl(var(--muted))" },
+  ];
+
   return (
     <div className="grid gap-6 md:grid-cols-2">
       <Card>
         <CardHeader>
-          <CardTitle>Weekly Practice</CardTitle>
-          <CardDescription>Your practice time in minutes for the last 7 days.</CardDescription>
+          <CardTitle>{t("Weekly Practice")}</CardTitle>
+          <CardDescription>{t("Your practice time in minutes for the last 7 days.")}</CardDescription>
         </CardHeader>
         <CardContent>
           <ResponsiveContainer width="100%" height={300}>
@@ -47,8 +50,8 @@ export function ProgressCharts() {
       </Card>
       <Card>
         <CardHeader>
-          <CardTitle>Lesson Completion</CardTitle>
-          <CardDescription>A breakdown of your completed lessons by category.</CardDescription>
+          <CardTitle>{t("Lesson Completion")}</CardTitle>
+          <CardDescription>{t("A breakdown of your completed lessons by category.")}</CardDescription>
         </CardHeader>
         <CardContent>
           <ResponsiveContainer width="100%" height={300}>

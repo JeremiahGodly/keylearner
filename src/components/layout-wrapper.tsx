@@ -4,17 +4,20 @@ import { usePathname } from "next/navigation";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { AppHeader } from "@/components/app-header";
-
-const pageTitles: { [key: string]: string } = {
-  "/": "Dashboard",
-  "/theory": "Music Theory",
-  "/songs": "Song Tutorials",
-  "/progress": "Your Progress",
-  "/resources": "Resource Library",
-};
+import { useI18n } from "@/context/i18n-context";
 
 export function LayoutWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname() || "/";
+  const { t } = useI18n();
+
+  const pageTitles: { [key: string]: string } = {
+    "/": t("Dashboard"),
+    "/theory": t("Music Theory"),
+    "/songs": t("Song Tutorials"),
+    "/progress": t("Your Progress"),
+    "/resources": t("Resource Library"),
+  };
+
   const title = pageTitles[pathname] ?? "KeyLearner";
 
   return (
