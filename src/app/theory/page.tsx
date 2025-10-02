@@ -1,7 +1,7 @@
+
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter, Button } from "@/components/ui";
 import { Music, KeyRound, Milestone, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useI18n } from "@/context/i18n-context";
@@ -57,3 +57,5 @@ export default function TheoryPage() {
     </div>
   );
 }
+
+    

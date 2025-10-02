@@ -1,8 +1,7 @@
 
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, Avatar, AvatarFallback } from "@/components/ui";
 import { Mail, Phone, Heart } from "lucide-react";
 import { useI18n } from "@/context/i18n-context";
 
@@ -65,3 +64,5 @@ export default function AboutUsPage() {
     </div>
   );
 }
+
+    

@@ -1,16 +1,8 @@
+
 "use client";
 
-import { SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarTrigger, Button, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Languages } from "lucide-react";
 import { useI18n } from "@/context/i18n-context";
 
@@ -47,3 +39,5 @@ export function AppHeader({ title }: AppHeaderProps) {
     </header>
   );
 }
+
+    

@@ -1,9 +1,7 @@
+
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, Tabs, TabsContent, TabsList, TabsTrigger, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Button } from "@/components/ui";
 import { Download, Video } from "lucide-react";
 import { useI18n } from "@/context/i18n-context";
 
@@ -114,3 +112,5 @@ export default function ResourcesPage() {
     </Card>
   );
 }
+
+    

@@ -11,7 +11,7 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarFooter,
-} from "@/components/ui/sidebar";
+} from "@/components/ui";
 import {
   LayoutDashboard,
   Music,

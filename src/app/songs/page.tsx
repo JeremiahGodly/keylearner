@@ -1,9 +1,7 @@
 
 "use client";
 
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardFooter, Button, Badge } from "@/components/ui";
 import Image from "next/image";
 import { useI18n } from "@/context/i18n-context";
 import { songs as songData } from "@/lib/song-data";
@@ -52,3 +50,5 @@ export default function SongsPage() {
     </div>
   );
 }
+
+    

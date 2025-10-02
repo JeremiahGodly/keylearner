@@ -1,6 +1,7 @@
+
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui";
 import { Trophy, Star, Music } from "lucide-react";
 import { ProgressCharts } from "@/components/progress-charts";
 import { useI18n } from "@/context/i18n-context";
@@ -38,3 +39,5 @@ export default function ProgressPage() {
     </div>
   );
 }
+
+    

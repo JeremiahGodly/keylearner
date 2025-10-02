@@ -1,7 +1,7 @@
+
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, Button } from "@/components/ui";
 import { StaticKeyboard } from "@/components/static-keyboard";
 import { Lightbulb, History, ChevronRight } from "lucide-react";
 import Link from "next/link";
@@ -97,3 +97,5 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+    

@@ -1,7 +1,8 @@
+
 "use client";
 
 import { Bar, BarChart, CartesianGrid, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis, Legend, Cell } from "recharts";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui";
 import { useI18n } from "@/context/i18n-context";
 
 export function ProgressCharts() {
@@ -85,3 +86,5 @@ export function ProgressCharts() {
     </div>
   );
 }
+
+    

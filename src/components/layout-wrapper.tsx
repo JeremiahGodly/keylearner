@@ -2,7 +2,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarInset } from "@/components/ui";
 import { AppSidebar } from "@/components/app-sidebar";
 import { AppHeader } from "@/components/app-header";
 import { useI18n } from "@/context/i18n-context";
@@ -36,3 +36,5 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
     </SidebarProvider>
   );
 }
+
+    
