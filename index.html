@@ -1,64 +1,2136 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KeyLearner - AI-Powered Piano Learning</title>
+    <title>KeyLearner - Interactive Piano & Keyboard Tutor</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 0 20px;
-            background-color: #f9f9f9;
+        /* CSS Variables for Premium Styling & Theme Switcher */
+        :root[data-theme="light"] {
+            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #e4ecf7 100%);
+            --card-bg: rgba(255, 255, 255, 0.75);
+            --card-border: rgba(255, 255, 255, 0.5);
+            --text-color: #1e293b;
+            --text-muted: #64748b;
+            --primary: #ef4444;
+            --primary-hover: #dc2626;
+            --primary-light: #fee2e2;
+            --accent: #f59e0b;
+            --accent-light: #fef3c7;
+            --sidebar-bg: rgba(255, 255, 255, 0.85);
+            --sidebar-hover: rgba(239, 68, 68, 0.08);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            --border-color: rgba(226, 232, 240, 0.8);
+            --piano-bg: #e2e8f0;
+            --white-key-bg: #ffffff;
+            --white-key-border: #cbd5e1;
+            --black-key-bg: #1e293b;
+            --glass-blur: blur(16px);
         }
-        .container {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+        :root[data-theme="dark"] {
+            --bg-gradient: linear-gradient(135deg, #090d16 0%, #151c2c 100%);
+            --card-bg: rgba(21, 28, 44, 0.7);
+            --card-border: rgba(255, 255, 255, 0.06);
+            --text-color: #f1f5f9;
+            --text-muted: #94a3b8;
+            --primary: #f87171;
+            --primary-hover: #ef4444;
+            --primary-light: rgba(239, 68, 68, 0.15);
+            --accent: #fbbf24;
+            --accent-light: rgba(251, 191, 36, 0.15);
+            --sidebar-bg: rgba(15, 22, 36, 0.85);
+            --sidebar-hover: rgba(248, 113, 113, 0.1);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --piano-bg: #0f172a;
+            --white-key-bg: #f8fafc;
+            --white-key-border: #475569;
+            --black-key-bg: #020617;
+            --glass-blur: blur(16px);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Layout Structure */
+        .app-container {
+            display: flex;
+            width: 100%;
+            height: 100vh;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: 280px;
+            background: var(--sidebar-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border-right: 1px solid var(--card-border);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 50;
+            box-shadow: var(--shadow);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 40px;
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+            animation: bounce 2s infinite alternate;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex-grow: 1;
+        }
+
+        .nav-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 14px 18px;
+            background: transparent;
+            border: none;
+            border-radius: 12px;
+            color: var(--text-color);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover {
+            background: var(--sidebar-hover);
+            transform: translateX(4px);
+        }
+
+        .nav-btn.active {
+            background: var(--primary);
+            color: #ffffff;
+            font-weight: 600;
+            box-shadow: 0 4px 14px rgba(239, 68, 68, 0.4);
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        /* Sidebar Footer / Creator Info */
+        .sidebar-footer {
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+            margin-top: 20px;
+        }
+
+        .sidebar-footer p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
             text-align: center;
         }
-        h1 {
-            color: #d64c4c; /* A shade of red to match the theme */
-            font-size: 2.5em;
-            margin-bottom: 0.5em;
+
+        /* Main Content Container */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow-y: auto;
+            position: relative;
         }
-        p {
-            font-size: 1.1em;
-            color: #555;
+
+        /* Header Styling */
+        .app-header {
+            height: 80px;
+            padding: 0 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(8px);
+            position: sticky;
+            top: 0;
+            z-index: 40;
         }
-        .button {
-            display: inline-block;
-            background-color: #d64c4c;
+
+        .header-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-color);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .action-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-color);
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--shadow);
+            transition: all 0.2s ease;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            background: var(--primary-light);
+            border-color: var(--primary);
+        }
+
+        /* Page Layout */
+        .page-panel {
+            padding: 40px;
+            display: none;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .page-panel.active {
+            display: block;
+        }
+
+        /* Custom Cards */
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-header {
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-subtitle {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Grid Framework */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 30px;
+        }
+
+        /* Interactive Piano Keyboard */
+        .keyboard-wrapper {
+            background: var(--piano-bg);
+            padding: 30px 15px;
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            box-shadow: inset 0 8px 16px rgba(0,0,0,0.1), var(--shadow);
+            margin: 20px 0;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .piano {
+            display: flex;
+            position: relative;
+            height: 220px;
+            width: 720px;
+            min-width: 720px;
+            user-select: none;
+        }
+
+        .white-key {
+            width: 48px;
+            height: 220px;
+            background: var(--white-key-bg);
+            border: 1px solid var(--white-key-border);
+            border-bottom-left-radius: 6px;
+            border-bottom-right-radius: 6px;
+            box-shadow: inset 0 -5px 0 #cbd5e1, 0 4px 6px rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 15px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            color: #94a3b8;
+            z-index: 1;
+            transition: none; /* No transition for instantaneous click visual response */
+        }
+
+        .white-key:active, .white-key.active {
+            background: #cbd5e1;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
+            padding-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .black-key {
+            width: 28px;
+            height: 135px;
+            background: var(--black-key-bg);
+            border: 1px solid #000;
+            border-bottom-left-radius: 4px;
+            border-bottom-right-radius: 4px;
+            box-shadow: inset 0 -3px 0 #334155, 0 3px 5px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            position: absolute;
+            z-index: 10;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 8px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            color: #94a3b8;
+            transition: none;
+        }
+
+        .black-key:active, .black-key.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            box-shadow: inset 0 2px 3px rgba(0,0,0,0.5);
             color: #fff;
-            padding: 12px 25px;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            margin-top: 20px;
-            transition: background-color 0.3s;
         }
-        .button:hover {
-            background-color: #c04444;
+
+        /* Dynamic Classes Tab & Modals */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
         }
-        .footer {
-            margin-top: 40px;
-            font-size: 0.9em;
-            color: #888;
+
+        .video-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .video-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border-color: var(--primary);
+        }
+
+        .video-thumbnail {
+            width: 100%;
+            height: 160px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .play-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .video-thumbnail:hover .play-overlay {
+            opacity: 1;
+        }
+
+        .play-btn-circle {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.5);
+        }
+
+        .play-icon {
+            width: 0;
+            height: 0;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            border-left: 16px solid #fff;
+            margin-left: 4px;
+        }
+
+        .video-info {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            justify-content: space-between;
+        }
+
+        .video-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .video-meta {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .primary-btn {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 10px var(--primary-light);
+        }
+
+        .primary-btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        /* Video Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-container {
+            width: 90%;
+            max-width: 800px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        .modal-overlay.active .modal-container {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-title {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--text-color);
+        }
+
+        .close-btn {
+            background: transparent;
+            border: none;
+            font-size: 1.75rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .close-btn:hover {
+            color: var(--primary);
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Song Practice / Note Highlights Trainer */
+        .song-trainer-section {
+            background: var(--primary-light);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 24px;
+            border: 1px solid var(--primary);
+            display: none;
+            position: relative;
+        }
+
+        .song-trainer-section.active {
+            display: block;
+        }
+
+        .trainer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .note-display {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding: 10px 0;
+            margin: 10px 0;
+        }
+
+        .note-bubble {
+            padding: 10px 18px;
+            background: var(--card-bg);
+            border: 2px solid var(--card-border);
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--text-color);
+            transition: all 0.2s ease;
+            text-align: center;
+            min-width: 60px;
+        }
+
+        .note-bubble.highlighted {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+            transform: scale(1.1);
+            box-shadow: 0 4px 10px rgba(239, 68, 68, 0.4);
+        }
+
+        .note-bubble.played {
+            background: var(--accent-light);
+            color: var(--text-muted);
+            border-color: var(--accent);
+            opacity: 0.6;
+        }
+
+        .keyboard-hint {
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 10px;
+        }
+
+        /* Tab Layout Styling inside Resources */
+        .tab-menu {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-color);
+            background: var(--sidebar-hover);
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .tab-panel {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        /* Generic Table Design */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .styled-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .styled-table th {
+            padding: 16px 20px;
+            font-weight: 600;
+            color: var(--text-muted);
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .styled-table td {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-color);
+        }
+
+        .styled-table tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Song Cards */
+        .song-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .song-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .song-cover {
+            height: 150px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .song-details {
+            padding: 20px;
+            flex-grow: 1;
+        }
+
+        .song-title {
+            font-weight: 700;
+            font-size: 1.15rem;
+            margin-bottom: 4px;
+        }
+
+        .song-artist {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-beginner {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .badge-intermediate {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-advanced {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* SVG charts */
+        .chart-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            height: 180px;
+            padding: 20px 0 0;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .chart-bar-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            width: 12%;
+        }
+
+        .chart-bar {
+            width: 100%;
+            background: linear-gradient(to top, var(--primary), var(--accent));
+            border-top-left-radius: 6px;
+            border-top-right-radius: 6px;
+            height: 0;
+            transition: height 1s ease-out;
+            box-shadow: 0 4px 10px var(--primary-light);
+        }
+
+        .chart-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        /* Achievements Flex */
+        .achievement-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .achievement-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            border-radius: 16px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border-color);
+        }
+
+        .achievement-badge {
+            font-size: 2rem;
+            background: var(--accent-light);
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+        }
+
+        /* About us team structure */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .team-card {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border-color);
+            padding: 24px;
+            border-radius: 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .avatar-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
+        }
+
+        .team-name {
+            font-weight: 700;
+            font-size: 1.15rem;
+            margin-bottom: 4px;
+        }
+
+        .team-role {
+            font-size: 0.9rem;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .team-contact {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-5px); }
+        }
+
+        /* Mobile Responsive adjustments */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+                overflow: auto;
+            }
+            .app-container {
+                flex-direction: column;
+                height: auto;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid var(--card-border);
+                padding: 16px;
+            }
+            .logo-section {
+                margin-bottom: 20px;
+            }
+            .nav-links {
+                flex-direction: row;
+                overflow-x: auto;
+                padding-bottom: 8px;
+            }
+            .nav-btn {
+                padding: 10px 14px;
+                white-space: nowrap;
+            }
+            .main-content {
+                height: auto;
+                overflow: visible;
+            }
+            .app-header {
+                padding: 0 20px;
+            }
+            .page-panel {
+                padding: 20px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🎹 KeyLearner</h1>
-        <p>Learn to play the piano with personalized, AI-powered lessons. Your journey to mastering the piano starts here.</p>
-        <a href="#" class="button">View Live Project</a>
+
+<div class="app-container">
+    <!-- Navigation Sidebar -->
+    <aside class="sidebar">
+        <div>
+            <div class="logo-section">
+                <span class="logo-icon">🎹</span>
+                <span class="logo-text">KeyLearner</span>
+            </div>
+            
+            <nav>
+                <ul class="nav-links">
+                    <li>
+                        <button class="nav-btn active" onclick="switchPage('dashboard')">
+                            <svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 13h1v7c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-7h1a1 1 0 0 0 .707-1.707l-9-9a.999.999 0 0 0-1.414 0l-9 9A1 1 0 0 0 3 13zm7 7v-5h4v5h-4zm2-15.586 6 6V20h-2v-5a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v5H6v-6.586l6-6z"/></svg>
+                            <span data-i18n="Dashboard">Dashboard</span>
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-btn" onclick="switchPage('theory')">
+                            <svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"/><path d="M11 11h2v6h-2zm0-4h2v2h-2z"/></svg>
+                            <span data-i18n="Music Theory">Music Theory</span>
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-btn" onclick="switchPage('songs')">
+                            <svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 2c-5.514 0-10 4.486-10 10s4.486 10 10 10 10-4.486 10-10-4.486-10-10-10zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"/><path d="m14.3 10.2-3.6-2.4a1 1 0 0 0-1.7.8v4.8a1 1 0 0 0 1.7.8l3.6-2.4a1 1 0 0 0 0-1.6z"/></svg>
+                            <span data-i18n="Song Tutorials">Song Tutorials</span>
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-btn" onclick="switchPage('progress')">
+                            <svg class="nav-icon" viewBox="0 0 24 24"><path d="M5 19h14V5H5v14zm2-12h10v10H7V7zm-4-4h18v18H3V3z"/></svg>
+                            <span data-i18n="Progress">Progress</span>
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-btn" onclick="switchPage('resources')">
+                            <svg class="nav-icon" viewBox="0 0 24 24"><path d="M19 2H5c-1.103 0-2 .897-2 2v16c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2zM5 20V4h14l.002 16H5z"/><path d="M7 6h10v2H7zm0 4h10v2H7zm0 4h7v2H7z"/></svg>
+                            <span data-i18n="Resources">Resources</span>
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-btn" onclick="switchPage('about')">
+                            <svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                            <span data-i18n="About Us">About Us</span>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <div class="sidebar-footer">
+            <p>&copy; 2026 KeyLearner</p>
+        </div>
+    </aside>
+
+    <!-- Main Content Workspace -->
+    <main class="main-content">
+        <!-- Sticky Header -->
+        <header class="app-header">
+            <h2 id="header-title" class="header-title" data-i18n="Welcome to KeyLearner">Welcome to KeyLearner</h2>
+            <div class="header-actions">
+                <!-- Theme toggle -->
+                <button class="action-btn" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
+                    <span id="theme-icon">🌙</span>
+                </button>
+                <!-- Language switcher -->
+                <button class="action-btn" onclick="toggleLanguage()" title="Change Language">
+                    🌐 <span id="current-language-label">English</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- PAGE: Dashboard -->
+        <div id="page-dashboard" class="page-panel active">
+            <!-- Hero Card -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">🎹 <span data-i18n="Keyboard Fundamentals">Keyboard Fundamentals</span></h3>
+                    <p class="card-subtitle" data-i18n="Get comfortable with the keyboard layout and proper hand posture.">Get comfortable with the keyboard layout and proper hand posture.</p>
+                </div>
+                <p style="margin-bottom: 20px;" data-i18n="This is a standard 88-key piano keyboard. The repeating pattern of 12 keys (7 white, 5 black) is called an octave. We'll start with Middle C, the C key closest to the center of the piano.">This is a standard 88-key piano keyboard. The repeating pattern of 12 keys (7 white, 5 black) is called an octave. We'll start with Middle C, the C key closest to the center of the piano.</p>
+                
+                <!-- Interactive Piano -->
+                <div class="keyboard-wrapper">
+                    <div id="dashboard-piano" class="piano">
+                        <!-- Rendered by JS -->
+                    </div>
+                </div>
+                <div class="keyboard-hint" data-i18n="KeyHint">Use computer keys: ZXCVBNM (Octave 3 White), SDGHJ (Octave 3 Black), QWERTYUI (Octave 4 White), 23567 (Octave 4 Black) to play.</div>
+            </div>
+
+            <!-- Song Note Highlight Trainer (Interactive Practice Mode) -->
+            <div id="song-trainer" class="song-trainer-section">
+                <div class="trainer-header">
+                    <h4 style="font-weight: 700; color: var(--primary);"><span data-i18n="Practice Mode">Practice Mode</span>: <span id="trainer-song-name">Twinkle Twinkle</span></h4>
+                    <button class="action-btn" onclick="closeTrainer()" style="padding: 4px 10px; font-size: 0.8rem;" data-i18n="Exit Practice">Exit Practice</button>
+                </div>
+                <p class="card-subtitle" data-i18n="Play the highlighted keys on your piano keyboard to learn this song step-by-step.">Play the highlighted keys on your piano keyboard to learn this song step-by-step.</p>
+                <div id="note-display" class="note-display">
+                    <!-- Note bubbles populated by JS -->
+                </div>
+            </div>
+
+            <!-- Learning path & recent activity grid -->
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">💡 <span data-i18n="Personalized Learning Path">Personalized Learning Path</span></h3>
+                        <p class="card-subtitle" data-i18n="Structured suggestions to guide your learning journey.">Structured suggestions to guide your learning journey.</p>
+                    </div>
+                    <ul class="styled-table" style="list-style: none;">
+                        <li style="padding: 12px 0; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong data-i18n="Introduction to C Major Scale">Introduction to C Major Scale</strong>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);" data-i18n="Theory">Theory</div>
+                            </div>
+                            <button class="action-btn" onclick="switchPage('theory')" data-i18n="Start">Start</button>
+                        </li>
+                        <li style="padding: 12px 0; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong data-i18n="Your First Chords: C, G, Am, F">Your First Chords: C, G, Am, F</strong>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);" data-i18n="Theory">Theory</div>
+                            </div>
+                            <button class="action-btn" onclick="switchPage('theory')" data-i18n="Start">Start</button>
+                        </li>
+                        <li style="padding: 12px 0; display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong data-i18n="'Twinkle Twinkle Little Star' Tutorial">'Twinkle Twinkle Little Star' Tutorial</strong>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);" data-i18n="Song">Song</div>
+                            </div>
+                            <button class="action-btn" onclick="startSongPractice(0)" data-i18n="Practice">Practice</button>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">⏳ <span data-i18n="Recent Activity">Recent Activity</span></h3>
+                        <p class="card-subtitle" data-i18n="A look back at your latest accomplishments.">A look back at your latest accomplishments.</p>
+                    </div>
+                    <ul class="styled-table" style="list-style: none;">
+                        <li style="padding: 12px 0; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between;">
+                            <span data-i18n="Completed: Basic Posture">Completed: Basic Posture</span>
+                            <span style="font-weight: 700; color: var(--primary);">100%</span>
+                        </li>
+                        <li style="padding: 12px 0; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between;">
+                            <span data-i18n="Practiced: 'Ode to Joy'">Practiced: 'Ode to Joy'</span>
+                            <span>15 <span data-i18n="min">min</span></span>
+                        </li>
+                        <li style="padding: 12px 0; display: flex; justify-content: space-between;">
+                            <span data-i18n="Unlocked: The D Major Scale">Unlocked: The D Major Scale</span>
+                            <span class="badge badge-intermediate" data-i18n="New Scale!">New Scale!</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE: Music Theory -->
+        <div id="page-theory" class="page-panel">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">📖 <span data-i18n="Music Theory">Music Theory Lessons</span></h3>
+                    <p class="card-subtitle" data-i18n="Learn the building blocks of melodies, chords, and timing.">Learn the building blocks of melodies, chords, and timing.</p>
+                </div>
+                
+                <div class="grid-3">
+                    <div class="card" style="margin: 0; background: rgba(255,255,255,0.01);">
+                        <h4 style="font-weight: 700; font-size: 1.25rem; margin-bottom: 12px; color: var(--primary);" data-i18n="Scales">Scales</h4>
+                        <p data-i18n="Learn the building blocks of melodies. Understand major and minor scales and how to play them.">Learn the building blocks of melodies. Understand major and minor scales and how to play them.</p>
+                    </div>
+                    <div class="card" style="margin: 0; background: rgba(255,255,255,0.01);">
+                        <h4 style="font-weight: 700; font-size: 1.25rem; margin-bottom: 12px; color: var(--primary);" data-i18n="Chords">Chords</h4>
+                        <p data-i18n="Discover how to play multiple notes together to create harmony. Start with basic triads.">Discover how to play multiple notes together to create harmony. Start with basic triads.</p>
+                    </div>
+                    <div class="card" style="margin: 0; background: rgba(255,255,255,0.01);">
+                        <h4 style="font-weight: 700; font-size: 1.25rem; margin-bottom: 12px; color: var(--primary);" data-i18n="Rhythm">Rhythm</h4>
+                        <p data-i18n="Grasp the fundamentals of timing in music, from whole notes to eighth notes.">Grasp the fundamentals of timing in music, from whole notes to eighth notes.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE: Song Tutorials -->
+        <div id="page-songs" class="page-panel">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">🎵 <span data-i18n="Song Tutorials">Song Tutorials</span></h3>
+                    <p class="card-subtitle" data-i18n="Select a song below to learn notes and play along.">Select a song below to learn notes and play along.</p>
+                </div>
+                
+                <div id="song-list-grid" class="song-grid">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE: Progress -->
+        <div id="page-progress" class="page-panel">
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">📈 <span data-i18n="Weekly Practice">Weekly Practice</span></h3>
+                        <p class="card-subtitle" data-i18n="Your practice time in minutes for the last 7 days.">Your practice time in minutes for the last 7 days.</p>
+                    </div>
+                    <!-- Custom HTML/CSS Bar Chart -->
+                    <div class="chart-container">
+                        <div class="chart-bar-wrapper">
+                            <div class="chart-bar" style="height: 40%"></div>
+                            <span class="chart-label" data-i18n="Mon">Mon</span>
+                        </div>
+                        <div class="chart-bar-wrapper">
+                            <div class="chart-bar" style="height: 60%"></div>
+                            <span class="chart-label" data-i18n="Tue">Tue</span>
+                        </div>
+                        <div class="chart-bar-wrapper">
+                            <div class="chart-bar" style="height: 25%"></div>
+                            <span class="chart-label" data-i18n="Wed">Wed</span>
+                        </div>
+                        <div class="chart-bar-wrapper">
+                            <div class="chart-bar" style="height: 75%"></div>
+                            <span class="chart-label" data-i18n="Thu">Thu</span>
+                        </div>
+                        <div class="chart-bar-wrapper">
+                            <div class="chart-bar" style="height: 50%"></div>
+                            <span class="chart-label" data-i18n="Fri">Fri</span>
+                        </div>
+                        <div class="chart-bar-wrapper">
+                            <div class="chart-bar" style="height: 90%"></div>
+                            <span class="chart-label" data-i18n="Sat">Sat</span>
+                        </div>
+                        <div class="chart-bar-wrapper">
+                            <div class="chart-bar" style="height: 10%"></div>
+                            <span class="chart-label" data-i18n="Sun">Sun</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">🏆 <span data-i18n="Achievements">Achievements</span></h3>
+                        <p class="card-subtitle" data-i18n="Milestones you've reached on your musical journey.">Milestones you've reached on your musical journey.</p>
+                    </div>
+                    <div class="achievement-list">
+                        <div class="achievement-item">
+                            <div class="achievement-badge">🥇</div>
+                            <div>
+                                <strong data-i18n="First Song Learned">First Song Learned</strong>
+                                <p style="font-size: 0.85rem; color: var(--text-muted);" data-i18n="You played 'Twinkle Twinkle Little Star'!">You played 'Twinkle Twinkle Little Star'!</p>
+                            </div>
+                        </div>
+                        <div class="achievement-item">
+                            <div class="achievement-badge">🎹</div>
+                            <div>
+                                <strong data-i18n="Scale Master">Scale Master</strong>
+                                <p style="font-size: 0.85rem; color: var(--text-muted);" data-i18n="You've learned 5 major scales.">You've learned 5 major scales.</p>
+                            </div>
+                        </div>
+                        <div class="achievement-item">
+                            <div class="achievement-badge">🔥</div>
+                            <div>
+                                <strong data-i18n="Practice Streak: 7 Days">Practice Streak: 7 Days</strong>
+                                <p style="font-size: 0.85rem; color: var(--text-muted);" data-i18n="Keep up the great work!">Keep up the great work!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE: Resources -->
+        <div id="page-resources" class="page-panel">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">📚 <span data-i18n="Resource Library">Resource Library</span></h3>
+                    <p class="card-subtitle" data-i18n="Supplementary materials to enhance your learning experience.">Supplementary materials to enhance your learning experience.</p>
+                </div>
+
+                <!-- Tabs Menu inside Resources -->
+                <div class="tab-menu">
+                    <button id="tab-btn-videos" class="tab-btn active" onclick="switchResourceTab('videos')" data-i18n="Video Demos">Video Classes</button>
+                    <button id="tab-btn-exercises" class="tab-btn" onclick="switchResourceTab('exercises')" data-i18n="Practice Exercises">Practice Exercises</button>
+                    <button id="tab-btn-sheet" class="tab-btn" onclick="switchResourceTab('sheet')" data-i18n="Sheet Music">Sheet Music</button>
+                </div>
+
+                <!-- PANEL: YouTube Video classes (Dynamic Language-Filtered) -->
+                <div id="resource-tab-videos" class="tab-panel active">
+                    <div style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center;">
+                        <h4 style="font-weight: 700; color: var(--text-color);"><span data-i18n="YouTube Video Classes">Professional YouTube Classes</span></h4>
+                        <span id="language-indicator-pill" class="badge badge-beginner" style="padding: 6px 14px;">English Only</span>
+                    </div>
+                    <div id="youtube-classes-grid" class="video-grid">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- PANEL: Exercises table -->
+                <div id="resource-tab-exercises" class="tab-panel">
+                    <div class="table-responsive">
+                        <table class="styled-table">
+                            <thead>
+                                <tr>
+                                    <th data-i18n="Title">Title</th>
+                                    <th data-i18n="Description">Description</th>
+                                    <th style="text-align: right;" data-i18n="Action">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="font-weight: 700;" data-i18n="Five-Finger Scale Practice (C Major)">Five-Finger Scale Practice (C Major)</td>
+                                    <td data-i18n="Develop finger strength and dexterity.">Develop finger strength and dexterity.</td>
+                                    <td style="text-align: right;"><button class="action-btn" data-i18n="Start Exercise">Start Exercise</button></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: 700;" data-i18n="Chord Transition Drills (C, G, Am, F)">Chord Transition Drills (C, G, Am, F)</td>
+                                    <td data-i18n="Practice moving smoothly between common chords.">Practice moving smoothly between common chords.</td>
+                                    <td style="text-align: right;"><button class="action-btn" data-i18n="Start Exercise">Start Exercise</button></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: 700;" data-i18n="Rhythm Tapping Exercise">Rhythm Tapping Exercise</td>
+                                    <td data-i18n="Improve your sense of timing with basic rhythms.">Improve your sense of timing with basic rhythms.</td>
+                                    <td style="text-align: right;"><button class="action-btn" data-i18n="Start Exercise">Start Exercise</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- PANEL: Sheet Music table -->
+                <div id="resource-tab-sheet" class="tab-panel">
+                    <div class="table-responsive">
+                        <table class="styled-table">
+                            <thead>
+                                <tr>
+                                    <th data-i18n="Title">Title</th>
+                                    <th data-i18n="Artist">Artist</th>
+                                    <th data-i18n="Difficulty">Difficulty</th>
+                                    <th style="text-align: right;" data-i18n="Action">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="font-weight: 700;">Ode to Joy</td>
+                                    <td>Beethoven</td>
+                                    <td><span class="badge badge-beginner" data-i18n="Beginner">Beginner</span></td>
+                                    <td style="text-align: right;"><button class="action-btn" data-i18n="Download">Download</button></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: 700;">Amazing Grace</td>
+                                    <td>John Newton</td>
+                                    <td><span class="badge badge-beginner" data-i18n="Beginner">Beginner</span></td>
+                                    <td style="text-align: right;"><button class="action-btn" data-i18n="Download">Download</button></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: 700;">Für Elise</td>
+                                    <td>Beethoven</td>
+                                    <td><span class="badge badge-intermediate" data-i18n="Intermediate">Intermediate</span></td>
+                                    <td style="text-align: right;"><button class="action-btn" data-i18n="Download">Download</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE: About Us -->
+        <div id="page-about" class="page-panel">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">👥 <span data-i18n="Our Team">Our Team</span></h3>
+                    <p class="card-subtitle" data-i18n="The developers behind KeyLearner.">The developers behind KeyLearner.</p>
+                </div>
+                
+                <div class="team-grid">
+                    <div class="team-card">
+                        <div class="avatar-circle">JV</div>
+                        <div class="team-name">Jeremiah Godly Varhese</div>
+                        <div class="team-role">Lead Developer</div>
+                        <div class="team-contact">
+                            <span>📧 jrmhgodly@gmail.com</span>
+                            <span>📞 8078041809</span>
+                        </div>
+                    </div>
+                    <div class="team-card">
+                        <div class="avatar-circle">DV</div>
+                        <div class="team-name">Dan Joseph Varghese</div>
+                        <div class="team-role">Frontend Specialist</div>
+                        <div class="team-contact">
+                            <span>📧 danjoseph@gmail.com</span>
+                            <span>📞 9400752784</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="text-align: center;">
+                <div style="font-size: 3rem; margin-bottom: 12px;">❤️</div>
+                <h3 class="card-title" style="justify-content: center;" data-i18n="Thank You">Thank You</h3>
+                <p style="margin-top: 10px;" data-i18n="Thank you for using KeyLearner. We hope it helps you on your musical journey!">Thank you for using KeyLearner. We hope it helps you on your musical journey!</p>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- YouTube Video Modal Overlay -->
+<div id="video-modal" class="modal-overlay" onclick="closeModalOnOverlay(event)">
+    <div class="modal-container">
+        <div class="modal-header">
+            <span id="modal-video-title" class="modal-title">Watch Class</span>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <a id="modal-youtube-link" href="" target="_blank" class="action-btn" style="text-decoration: none; font-size: 0.85rem; padding: 6px 12px;">Open on YouTube ↗</a>
+                <button class="close-btn" onclick="closeVideoModal()">&times;</button>
+            </div>
+        </div>
+        <div class="video-container">
+            <iframe id="video-iframe" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
     </div>
-    <div class="footer">
-        <p>This is a project created with Next.js and Firebase Studio. The code is hosted on GitHub.</p>
-    </div>
+</div>
+
+<!-- ==================== JS CONTROLLER & CORE CODE ==================== -->
+<script>
+    // 1. Translation Dictionary (English & Malayalam)
+    const translations = {
+        en: {
+            "Dashboard": "Dashboard",
+            "Music Theory": "Music Theory",
+            "Song Tutorials": "Song Tutorials",
+            "Progress": "Progress",
+            "Resources": "Resources",
+            "About Us": "About Us",
+            "Our Team": "Our Team",
+            "Welcome to KeyLearner": "Welcome to KeyLearner",
+            "Your journey to mastering the piano starts now.": "Your journey to mastering the piano starts now.",
+            "Keyboard Fundamentals": "Keyboard Fundamentals",
+            "Get comfortable with the keyboard layout and proper hand posture.": "Get comfortable with the keyboard layout and proper hand posture.",
+            "This is a standard 88-key piano keyboard. The repeating pattern of 12 keys (7 white, 5 black) is called an octave. We'll start with Middle C, the C key closest to the center of the piano.": "This is a standard 88-key piano keyboard. The repeating pattern of 12 keys (7 white, 5 black) is called an octave. We'll start with Middle C, the C key closest to the center of the piano.",
+            "Personalized Learning Path": "Personalized Learning Path",
+            "Structured suggestions to guide your learning journey.": "Structured suggestions to guide your learning journey.",
+            "Introduction to C Major Scale": "Introduction to C Major Scale",
+            "Theory": "Theory",
+            "Your First Chords: C, G, Am, F": "Your First Chords: C, G, Am, F",
+            "'Twinkle Twinkle Little Star' Tutorial": "'Twinkle Twinkle Little Star' Tutorial",
+            "Song": "Song",
+            "Recent Activity": "Recent Activity",
+            "A look back at your latest accomplishments.": "A look back at your latest accomplishments.",
+            "Completed: Basic Posture": "Completed: Basic Posture",
+            "Practiced: 'Ode to Joy'": "Practiced: 'Ode to Joy'",
+            "min": "min",
+            "Unlocked: The D Major Scale": "Unlocked: The D Major Scale",
+            "New Scale!": "New Scale!",
+            "Achievements": "Achievements",
+            "Milestones you've reached on your musical journey.": "Milestones you've reached on your musical journey.",
+            "First Song Learned": "First Song Learned",
+            "You played 'Twinkle Twinkle Little Star'!": "You played 'Twinkle Twinkle Little Star'!",
+            "Scale Master": "Scale Master",
+            "You've learned 5 major scales.": "You've learned 5 major scales.",
+            "Practice Streak: 7 Days": "Practice Streak: 7 Days",
+            "Keep up the great work!": "Keep up the great work!",
+            "Weekly Practice": "Weekly Practice",
+            "Your practice time in minutes for the last 7 days.": "Your practice time in minutes for the last 7 days.",
+            "Mon": "Mon",
+            "Tue": "Tue",
+            "Wed": "Wed",
+            "Thu": "Thu",
+            "Fri": "Fri",
+            "Sat": "Sat",
+            "Sun": "Sun",
+            "Songs": "Songs",
+            "Exercises": "Exercises",
+            "Resource Library": "Resource Library",
+            "Supplementary materials to enhance your learning experience.": "Supplementary materials to enhance your learning experience.",
+            "Practice Exercises": "Practice Exercises",
+            "Sheet Music": "Sheet Music",
+            "Video Demos": "Video Classes",
+            "Title": "Title",
+            "Description": "Description",
+            "Action": "Action",
+            "Five-Finger Scale Practice (C Major)": "Five-Finger Scale Practice (C Major)",
+            "Develop finger strength and dexterity.": "Develop finger strength and dexterity.",
+            "Start Exercise": "Start Exercise",
+            "Chord Transition Drills (C, G, Am, F)": "Chord Transition Drills (C, G, Am, F)",
+            "Practice moving smoothly between common chords.": "Practice moving smoothly between common chords.",
+            "Rhythm Tapping Exercise": "Rhythm Tapping Exercise",
+            "Improve your sense of timing with basic rhythms.": "Improve your sense of timing with basic rhythms.",
+            "Artist": "Artist",
+            "Difficulty": "Difficulty",
+            "Beginner": "Beginner",
+            "Intermediate": "Intermediate",
+            "Advanced": "Advanced",
+            "Download": "Download",
+            "Start Tutorial": "Start Tutorial",
+            "Scales": "Scales",
+            "Learn the building blocks of melodies. Understand major and minor scales and how to play them.": "Learn the building blocks of melodies. Understand major and minor scales and how to play them.",
+            "Learn More": "Learn More",
+            "Chords": "Chords",
+            "Discover how to play multiple notes together to create harmony. Start with basic triads.": "Discover how to play multiple notes together to create harmony. Start with basic triads.",
+            "Rhythm": "Rhythm",
+            "Grasp the fundamentals of timing in music, from whole notes to eighth notes.": "Grasp the fundamentals of timing in music, from whole notes to eighth notes.",
+            "The developers behind KeyLearner.": "The developers behind KeyLearner.",
+            "Thank You": "Thank You",
+            "Thank you for using KeyLearner. We hope it helps you on your musical journey!": "Thank you for using KeyLearner. We hope it helps you on your musical journey!",
+            "Start": "Start",
+            "Practice": "Practice",
+            "Music Theory Lessons": "Music Theory Lessons",
+            "Learn the building blocks of melodies, chords, and timing.": "Learn the building blocks of melodies, chords, and timing.",
+            "Select a song below to learn notes and play along.": "Select a song below to learn notes and play along.",
+            "YouTube Video Classes": "Professional YouTube Classes",
+            "KeyHint": "Use computer keys: ZXCVBNM (Octave 3 White), SDGHJ (Octave 3 Black), QWERTYUI (Octave 4 White), 23567 (Octave 4 Black) to play.",
+            "Watch Class": "Watch Class",
+            "Practice Mode": "Practice Mode",
+            "Exit Practice": "Exit Practice",
+            "Play the highlighted keys on your piano keyboard to learn this song step-by-step.": "Play the highlighted keys on your piano keyboard to learn this song step-by-step.",
+            "Lesson 1": "Lesson 1"
+        },
+        ml: {
+            "Dashboard": "ഡാഷ്ബോർഡ്",
+            "Music Theory": "സംഗീത സിദ്ധാന്തം",
+            "Song Tutorials": "ഗാന പരിശീലനം",
+            "Progress": "വളർച്ചാ പുരോഗതി",
+            "Resources": "പാഠ്യവിഭവങ്ങൾ",
+            "About Us": "ഞങ്ങളെക്കുറിച്ച്",
+            "Our Team": "ഞങ്ങളുടെ ടീം",
+            "Welcome to KeyLearner": "കീ-ലേണറിലേക്ക് സ്വാഗതം",
+            "Your journey to mastering the piano starts now.": "പിയാനോ പഠിക്കാനുള്ള നിങ്ങളുടെ യാത്ര ഇപ്പോൾ ആരംഭിക്കുന്നു.",
+            "Keyboard Fundamentals": "കീബോർഡ് അടിസ്ഥാനകാര്യങ്ങൾ",
+            "Get comfortable with the keyboard layout and proper hand posture.": "കീബോർഡ് ലേഔട്ടും ശരിയായ കൈയുടെ സ്ഥാനവും മനസ്സിലാക്കുക.",
+            "This is a standard 88-key piano keyboard. The repeating pattern of 12 keys (7 white, 5 black) is called an octave. We'll start with Middle C, the C key closest to the center of the piano.": "ഇതൊരു സാധാരണ 88-കീ പിയാനോ കീബോർഡാണ്. 12 കീകൾ (7 വെളുപ്പ്, 5 കറുപ്പ്) ആവർത്തിക്കുന്ന പാറ്റേണിനെ ഒരു ഒക്ടേവ് എന്ന് പറയുന്നു. പിയാനോയുടെ മധ്യഭാഗത്തുള്ള C കീ, മിഡിൽ സിയിൽ നിന്ന് ഞങ്ങൾ ആരംഭിക്കും.",
+            "Personalized Learning Path": "വ്യക്തിഗത പഠന പാത",
+            "Structured suggestions to guide your learning journey.": "നിങ്ങളുടെ പഠന യാത്രയെ നയിക്കാൻ ക്രമീകരിച്ച നിർദ്ദേശങ്ങൾ.",
+            "Introduction to C Major Scale": "സി മേജർ സ്കെയിലിന് ഒരു ആമുഖം",
+            "Theory": "സിദ്ധാന്തം",
+            "Your First Chords: C, G, Am, F": "നിങ്ങളുടെ ആദ്യ കോർഡുകൾ: C, G, Am, F",
+            "'Twinkle Twinkle Little Star' Tutorial": "'മിന്നാമിന്നി' ട്യൂട്ടോറിയൽ",
+            "Song": "പാട്ട്",
+            "Recent Activity": "സമീപകാല പ്രവർത്തനം",
+            "A look back at your latest accomplishments.": "നിങ്ങളുടെ ഏറ്റവും പുതിയ നേട്ടങ്ങളിലേക്ക് ഒരു തിരിഞ്ഞുനോട്ടം.",
+            "Completed: Basic Posture": "പൂർത്തിയായി: അടിസ്ഥാന കൈ രീതി",
+            "Practiced: 'Ode to Joy'": "പരിശീലിച്ചു: 'ഓഡ് ടു ജോയ്'",
+            "min": "മിനിറ്റ്",
+            "Unlocked: The D Major Scale": "അൺലോക്ക് ചെയ്തു: ഡി മേജർ സ്കെയിൽ",
+            "New Scale!": "പുതിയ സ്കെയിൽ!",
+            "Achievements": "നേട്ടങ്ങൾ",
+            "Milestones you've reached on your musical journey.": "നിങ്ങളുടെ സംഗീത യാത്രയിൽ നിങ്ങൾ എത്തിച്ചേർന്ന നാഴികക്കല്ലുകൾ.",
+            "First Song Learned": "ആദ്യത്തെ ഗാനം പഠിച്ചു",
+            "You played 'Twinkle Twinkle Little Star'!": "നിങ്ങൾ 'മിന്നാമിന്നി' വിജയകരമായി വായിച്ചു!",
+            "Scale Master": "സ്കെയിൽ മാസ്റ്റർ",
+            "You've learned 5 major scales.": "നിങ്ങൾ 5 പ്രധാന സ്കെയിലുകൾ പഠിച്ചു.",
+            "Practice Streak: 7 Days": "പരിശീലന സ്ട്രീക്ക്: 7 ദിവസം",
+            "Keep up the great work!": "ഈ മികച്ച പ്രകടനം തുടരുക!",
+            "Weekly Practice": "പ്രതിവാര പരിശീലനം",
+            "Your practice time in minutes for the last 7 days.": "കഴിഞ്ഞ 7 ദിവസത്തെ നിങ്ങളുടെ പരിശീലന സമയം മിനിറ്റിൽ.",
+            "Mon": "തിങ്കൾ",
+            "Tue": "ചൊവ്വ",
+            "Wed": "ബുധൻ",
+            "Thu": "വ്യാഴം",
+            "Fri": "വെള്ളി",
+            "Sat": "ശനി",
+            "Sun": "ഞായർ",
+            "Songs": "പാട്ടുകൾ",
+            "Exercises": "വ്യായാമങ്ങൾ",
+            "Resource Library": "റിസോഴ്സ് ലൈബ്രറി",
+            "Supplementary materials to enhance your learning experience.": "നിങ്ങളുടെ പഠനാനുഭവം മെച്ചപ്പെടുത്തുന്നതിനുള്ള അനുബന്ധ മെറ്റീരിയലുകൾ.",
+            "Practice Exercises": "പരിശീലന വ്യായാമങ്ങൾ",
+            "Sheet Music": "സംഗീത കുറിപ്പുകൾ",
+            "Video Demos": "വീഡിയോ ക്ലാസുകൾ",
+            "Title": "പേര്",
+            "Description": "വിവരണം",
+            "Action": "നടപടി",
+            "Five-Finger Scale Practice (C Major)": "ഫൈവ്-ഫിംഗർ സ്കെയിൽ പരിശീലനം (സി മേജർ)",
+            "Develop finger strength and dexterity.": "വിരലുകളുടെ കരുത്തും വേഗതയും വർദ്ധിപ്പിക്കുക.",
+            "Start Exercise": "പരിശീലനം തുടങ്ങുക",
+            "Chord Transition Drills (C, G, Am, F)": "കോർഡ് മാറ്റ പരിശീലനം (C, G, Am, F)",
+            "Practice moving smoothly between common chords.": "കോർഡുകൾക്കിടയിൽ സുഗമമായി മാറാൻ പരിശീലിക്കുക.",
+            "Rhythm Tapping Exercise": "താള പരിശീലനം",
+            "Improve your sense of timing with basic rhythms.": "അടിസ്ഥാന താളങ്ങളിലൂടെ നിങ്ങളുടെ സമയബോധം മെച്ചപ്പെടുത്തുക.",
+            "Artist": "സ്രഷ്ടാവ്",
+            "Difficulty": "കാഠിന്യം",
+            "Beginner": "തുടക്കക്കാരൻ",
+            "Intermediate": "ഇടത്തരം",
+            "Advanced": "വിദഗ്ദ്ധൻ",
+            "Download": "ഡൗൺലോഡ്",
+            "Start Tutorial": "പരിശീലനം തുടങ്ങുക",
+            "Scales": "സ്കെയിലുകൾ",
+            "Learn the building blocks of melodies. Understand major and minor scales and how to play them.": "രാഗങ്ങളുടെ അടിസ്ഥാനം പഠിക്കുക. മേജർ, മൈനർ സ്കെയിലുകളും അവ എങ്ങനെ വായിക്കാമെന്നും മനസ്സിലാക്കുക.",
+            "Learn More": "കൂടുതൽ അറിയാൻ",
+            "Chords": "കോർഡുകൾ",
+            "Discover how to play multiple notes together to create harmony. Start with basic triads.": "ഒരുമിച്ച് വായിച്ച് ഹാർമണി സൃഷ്ടിക്കാൻ പഠിക്കുക. അടിസ്ഥാന കോർഡുകളിൽ നിന്ന് തുടങ്ങാം.",
+            "Rhythm": "താളം",
+            "Grasp the fundamentals of timing in music, from whole notes to eighth notes.": "സംഗീതത്തിലെ താളത്തിന്റെ അടിസ്ഥാന വശങ്ങൾ മനസ്സിലാക്കുക.",
+            "The developers behind KeyLearner.": "കീ ലേണറിന് പിന്നിലെ ഡെവലപ്പർമാർ.",
+            "Thank You": "നന്ദി",
+            "Thank you for using KeyLearner. We hope it helps you on your musical journey!": "കീ ലേണർ ഉപയോഗിച്ചതിന് നന്ദി. നിങ്ങളുടെ സംഗീത യാത്രയിൽ ഇത് നിങ്ങളെ സഹായിക്കുമെന്ന് ഞങ്ങൾ പ്രതീക്ഷിക്കുന്നു!",
+            "Start": "തുടങ്ങുക",
+            "Practice": "പരിശീലനം",
+            "Music Theory Lessons": "സംഗീത സിദ്ധാന്ത പാഠങ്ങൾ",
+            "Learn the building blocks of melodies, chords, and timing.": "രാഗങ്ങൾ, കോർഡുകൾ, താളം എന്നിവയുടെ അടിസ്ഥാനങ്ങൾ പഠിക്കുക.",
+            "Select a song below to learn notes and play along.": "പരിശീലിക്കുന്നതിനായി താഴെ നിന്ന് ഒരു ഗാനം തിരഞ്ഞെടുക്കുക.",
+            "YouTube Video Classes": "യൂട്യൂബ് വീഡിയോ ക്ലാസുകൾ",
+            "KeyHint": "കമ്പ്യൂട്ടർ കീകൾ ഉപയോഗിക്കുക: ZXCVBNM (ഒക്ടേവ് 3 വൈറ്റ്), SDGHJ (ഒക്ടേവ് 3 ബ്ലാക്ക്), QWERTYUI (ഒക്ടേവ് 4 വൈറ്റ്), 23567 (ഒക്ടേവ് 4 ബ്ലാക്ക്) വായിക്കാൻ.",
+            "Watch Class": "ക്ലാസ് കാണുക",
+            "Practice Mode": "പരിശീലന രീതി",
+            "Exit Practice": "പുറത്തുകടക്കുക",
+            "Play the highlighted keys on your piano keyboard to learn this song step-by-step.": "ഈ ഗാനം ഘട്ടം ഘട്ടമായി പഠിക്കാൻ ഹൈലൈറ്റ് ചെയ്ത കീകൾ പിയാനോയിൽ വായിക്കുക.",
+            "Lesson 1": "പാഠം 1"
+        }
+    };
+
+    let currentLocale = "en";
+
+    // 2. Localized YouTube Video Classes Data
+    const youtubeClasses = {
+        en: [
+            {
+                title: "How To Play Piano (Beginner Piano Lesson)",
+                instructor: "Lisa Witt (Pianote)",
+                videoId: "wo7w-K50N5c",
+                query: "Pianote+Lisa+Witt+Beginner+Piano+Lesson+wo7w-K50N5c",
+                difficulty: "Beginner",
+                duration: "10 min"
+            },
+            {
+                title: "How to Play Piano: Day 1 - EASY First Lesson",
+                instructor: "Zach Evans (Become a Piano Superhuman)",
+                videoId: "d5P61nFf67c",
+                query: "Become+a+Piano+Superhuman+How+to+Play+Piano+Day+1+d5P61nFf67c",
+                difficulty: "Beginner",
+                duration: "15 min"
+            },
+            {
+                title: "Learn To Play Piano - Lesson 1 Basics",
+                instructor: "Andrew Furmanczyk",
+                videoId: "8SXI_fN9xY8",
+                query: "Andrew+Furmanczyk+Learn+To+Play+Piano+Lesson+1+8SXI_fN9xY8",
+                difficulty: "Beginner",
+                duration: "25 min"
+            },
+            {
+                title: "Top 5 Piano Exercises for Beginners",
+                instructor: "Pianote",
+                videoId: "4yC4H2Q_Q4M",
+                query: "Pianote+Top+5+Piano+Exercises+for+Beginners+4yC4H2Q_Q4M",
+                difficulty: "Intermediate",
+                duration: "12 min"
+            }
+        ],
+        ml: [
+            {
+                title: "Free Piano/Keyboard Class Malayalam - Lesson 1",
+                instructor: "Bells n Melodies",
+                videoId: "5wX9q3wW_6c",
+                query: "Bells+n+Melodies+Piano+Keyboard+Malayalam+Class+Lesson+1+5wX9q3wW_6c",
+                difficulty: "Beginner",
+                duration: "18 min"
+            },
+            {
+                title: "Basic Piano/Keyboard Tutorial in Malayalam (Part-1)",
+                instructor: "Kv Shine",
+                videoId: "t5x-5QoW_0U",
+                query: "Kv+Shine+KEYBOARD+PIANO+CLASS+MALAYALAM+PART+1+t5x-5QoW_0U",
+                difficulty: "Beginner",
+                duration: "14 min"
+            },
+            {
+                title: "How to Play Any Song on Keyboard Lesson 1 (Malayalam)",
+                instructor: "FR Sinu Velangaden",
+                videoId: "1aL4vX3L_wI",
+                query: "FR+Sinu+Velangaden+How+To+play+any+Song+Keyboard+Malayalam+Lesson+1+1aL4vX3L_wI",
+                difficulty: "Beginner",
+                duration: "22 min"
+            },
+            {
+                title: "Keyboard Learning Lesson 1 Malayalam",
+                instructor: "Music Cafe",
+                videoId: "Jd7301R76w8",
+                query: "Music+Cafe+Learn+Keyboard+Lesson+1+Malayalam+Jd7301R76w8",
+                difficulty: "Intermediate",
+                duration: "30 min"
+            }
+        ]
+    };
+
+    // 3. Song Tutorials Data
+    const songsData = [
+        {
+            title: "Twinkle Twinkle Little Star",
+            artist: "Folk Song",
+            genre: "Children's",
+            difficulty: "Beginner",
+            imgSrc: "https://picsum.photos/600/400?random=1",
+            notes: ["C4", "C4", "G4", "G4", "A4", "A4", "G4", "F4", "F4", "E4", "E4", "D4", "D4", "C4"]
+        },
+        {
+            title: "Ode to Joy",
+            artist: "Ludwig van Beethoven",
+            genre: "Classical",
+            difficulty: "Beginner",
+            imgSrc: "https://picsum.photos/600/400?random=2",
+            notes: ["E4", "E4", "F4", "G4", "G4", "F4", "E4", "D4", "C4", "C4", "D4", "E4", "E4", "D4", "D4"]
+        },
+        {
+            title: "Hallelujah",
+            artist: "Leonard Cohen",
+            genre: "Pop",
+            difficulty: "Intermediate",
+            imgSrc: "https://picsum.photos/600/400?random=3",
+            notes: ["E4", "G4", "G4", "G4", "A4", "A4", "A4", "G4", "G4", "E4", "G4", "G4"]
+        },
+        {
+            title: "Someone Like You",
+            artist: "Adele",
+            genre: "Pop",
+            difficulty: "Intermediate",
+            imgSrc: "https://picsum.photos/600/400?random=4",
+            notes: ["A3", "C4", "E4", "A4", "G4", "B3", "E4", "G4", "F4", "A3", "D4", "F4"]
+        },
+        {
+            title: "Clair de Lune",
+            artist: "Claude Debussy",
+            genre: "Classical",
+            difficulty: "Advanced",
+            imgSrc: "https://picsum.photos/600/400?random=5",
+            notes: ["F4", "Ab4", "Db5", "F5", "Eb5", "Db5", "C5", "Bb4", "Ab4", "F4"]
+        },
+        {
+            title: "Bohemian Rhapsody",
+            artist: "Queen",
+            genre: "Rock",
+            difficulty: "Advanced",
+            imgSrc: "https://picsum.photos/600/400?random=6",
+            notes: ["Bb3", "D4", "F4", "G4", "Ab4", "G4", "F4", "Eb4", "D4", "C4"]
+        }
+    ];
+
+    // Frequencies for Web Audio API Piano Notes
+    const noteFrequencies = {
+        "C3": 130.81, "Db3": 138.59, "D3": 146.83, "Eb3": 155.56, "E3": 164.81,
+        "F3": 174.61, "Gb3": 185.00, "G3": 196.00, "Ab3": 207.65, "A3": 220.00,
+        "Bb3": 233.08, "B3": 246.94,
+        "C4": 261.63, "Db4": 277.18, "D4": 293.66, "Eb4": 311.13, "E4": 329.63,
+        "F4": 349.23, "Gb4": 369.99, "G4": 392.00, "Ab4": 415.30, "A4": 440.00,
+        "Bb4": 466.16, "B4": 493.88, "C5": 523.25
+    };
+
+    // Computer Keyboard mapping to play notes (2 octaves)
+    const keyboardMapping = {
+        // Octave 3 (Lower row)
+        'z': 'C3', 's': 'Db3', 'x': 'D3', 'd': 'Eb3', 'c': 'E3', 'v': 'F3',
+        'g': 'Gb3', 'b': 'G3', 'h': 'Ab3', 'n': 'A3', 'j': 'Bb3', 'm': 'B3',
+        // Octave 4 & 5 (Upper row)
+        'q': 'C4', '2': 'Db4', 'w': 'D4', '3': 'Eb4', 'e': 'E4', 'r': 'F4',
+        '5': 'Gb4', 't': 'G4', '6': 'Ab4', 'y': 'A4', '7': 'Bb4', 'u': 'B4', 'i': 'C5'
+    };
+
+    // Sound Synthesizer via Web Audio API
+    let audioCtx = null;
+    function getAudioContext() {
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+        return audioCtx;
+    }
+
+    function playSynthNote(noteName) {
+        const freq = noteFrequencies[noteName];
+        if (!freq) return;
+
+        try {
+            const ctx = getAudioContext();
+            const osc = ctx.createOscillator();
+            const gainNode = ctx.createGain();
+
+            osc.type = 'triangle'; // Soft organ/piano feel
+            osc.frequency.setValueAtTime(freq, ctx.currentTime);
+
+            // Envelope to mimic key press sound
+            gainNode.gain.setValueAtTime(0, ctx.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.6, ctx.currentTime + 0.02);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.8);
+
+            osc.connect(gainNode);
+            gainNode.connect(ctx.destination);
+
+            osc.start();
+            osc.stop(ctx.currentTime + 0.82);
+
+            // Highlight key visually on DOM
+            highlightPianoKey(noteName);
+            
+            // Advance Trainer if in practice mode
+            checkTrainerNote(noteName);
+        } catch (e) {
+            console.error("Audio Synthesis error: ", e);
+        }
+    }
+
+    // Switch between pages (Dashboard, Theory, Songs, Progress, Resources, About)
+    function switchPage(pageId) {
+        // Deactivate all panels
+        document.querySelectorAll('.page-panel').forEach(p => p.classList.remove('active'));
+        // Activate requested panel
+        document.getElementById(`page-${pageId}`).classList.add('active');
+
+        // Deactivate all nav buttons
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        // Find and activate requested button
+        if (event && event.currentTarget) {
+            event.currentTarget.classList.add('active');
+            // Update header title translated
+            document.getElementById('header-title').textContent = translations[currentLocale][event.currentTarget.querySelector('span').getAttribute('data-i18n')] || event.currentTarget.querySelector('span').textContent;
+        }
+    }
+
+    // Switch Resources Tabs
+    function switchResourceTab(tabId) {
+        document.querySelectorAll('#page-resources .tab-panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('#page-resources .tab-btn').forEach(b => b.classList.remove('active'));
+        
+        document.getElementById(`resource-tab-${tabId}`).classList.add('active');
+        document.getElementById(`tab-btn-${tabId === 'videos' ? 'videos' : tabId === 'exercises' ? 'exercises' : 'sheet'}`).classList.add('active');
+    }
+
+    // Theme Switcher (Light / Dark)
+    function toggleTheme() {
+        const html = document.documentElement;
+        const currentTheme = html.getAttribute('data-theme');
+        const nextTheme = currentTheme === 'light' ? 'dark' : 'light';
+        html.setAttribute('data-theme', nextTheme);
+        document.getElementById('theme-icon').textContent = nextTheme === 'light' ? '🌙' : '☀️';
+    }
+
+    // Language Toggle (English / Malayalam)
+    function toggleLanguage() {
+        currentLocale = currentLocale === "en" ? "ml" : "en";
+        document.getElementById('current-language-label').textContent = currentLocale === "en" ? "English" : "Malayalam";
+        
+        // Translate all items with data-i18n
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (translations[currentLocale][key]) {
+                el.textContent = translations[currentLocale][key];
+            }
+        });
+
+        // Translate placeholders/indicators
+        const pill = document.getElementById('language-indicator-pill');
+        if (pill) {
+            pill.textContent = currentLocale === "en" ? "English Classes" : "മലയാളം ക്ലാസുകൾ";
+        }
+
+        // Re-render components with translated content
+        renderYouTubeClasses();
+        renderSongsList();
+    }
+
+    // Render 2-octave piano keyboard
+    function renderPiano(containerId) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = "";
+
+        const keys = [
+            { note: "C3", type: "white" },
+            { note: "Db3", type: "black", offset: 34 },
+            { note: "D3", type: "white" },
+            { note: "Eb3", type: "black", offset: 82 },
+            { note: "E3", type: "white" },
+            { note: "F3", type: "white" },
+            { note: "Gb3", type: "black", offset: 178 },
+            { note: "G3", type: "white" },
+            { note: "Ab3", type: "black", offset: 226 },
+            { note: "A3", type: "white" },
+            { note: "Bb3", type: "black", offset: 274 },
+            { note: "B3", type: "white" },
+            { note: "C4", type: "white" },
+            { note: "Db4", type: "black", offset: 370 },
+            { note: "D4", type: "white" },
+            { note: "Eb4", type: "black", offset: 418 },
+            { note: "E4", type: "white" },
+            { note: "F4", type: "white" },
+            { note: "Gb4", type: "black", offset: 514 },
+            { note: "G4", type: "white" },
+            { note: "Ab4", type: "black", offset: 562 },
+            { note: "A4", type: "white" },
+            { note: "Bb4", type: "black", offset: 610 },
+            { note: "B4", type: "white" },
+            { note: "C5", type: "white" }
+        ];
+
+        // Create White Keys First
+        keys.forEach(k => {
+            if (k.type === "white") {
+                const btn = document.createElement('button');
+                btn.className = 'white-key';
+                btn.id = `${containerId}-${k.note}`;
+                btn.innerHTML = `<span>${k.note}</span>`;
+                btn.onclick = () => playSynthNote(k.note);
+                container.appendChild(btn);
+            }
+        });
+
+        // Create Black Keys Absolutely Positioned
+        keys.forEach(k => {
+            if (k.type === "black") {
+                const btn = document.createElement('button');
+                btn.className = 'black-key';
+                btn.id = `${containerId}-${k.note}`;
+                btn.style.left = `${k.offset}px`;
+                btn.innerHTML = `<span>${k.note.replace('b', '♭')}</span>`;
+                btn.onclick = () => playSynthNote(k.note);
+                container.appendChild(btn);
+            }
+        });
+    }
+
+    // Visual feedback helper for played keys
+    function highlightPianoKey(noteName) {
+        const dashboardKey = document.getElementById(`dashboard-piano-${noteName}`);
+        if (dashboardKey) {
+            dashboardKey.classList.add('active');
+            setTimeout(() => dashboardKey.classList.remove('active'), 200);
+        }
+    }
+
+    // Render YouTube Video Classes dynamically based on language
+    function renderYouTubeClasses() {
+        const container = document.getElementById('youtube-classes-grid');
+        container.innerHTML = "";
+
+        const videos = youtubeClasses[currentLocale];
+        videos.forEach(v => {
+            const card = document.createElement('div');
+            card.className = 'video-card';
+            card.innerHTML = `
+                <a href="https://www.youtube.com/results?search_query=${v.query}" target="_blank" class="video-thumbnail" style="background-image: url('https://img.youtube.com/vi/${v.videoId}/hqdefault.jpg'); display: block; text-decoration: none;">
+                    <div class="play-overlay">
+                        <div class="play-btn-circle">
+                            <div class="play-icon"></div>
+                        </div>
+                    </div>
+                </a>
+                <div class="video-info">
+                    <div>
+                        <h4 class="video-title">${v.title}</h4>
+                        <p class="video-meta">👤 ${v.instructor} | ⏱️ ${v.duration}</p>
+                    </div>
+                    <a href="https://www.youtube.com/results?search_query=${v.query}" target="_blank" class="primary-btn" style="text-decoration: none; display: block; text-align: center;">
+                        ${translations[currentLocale]["Watch Class"]}
+                    </a>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    // Render Song List Grid
+    function renderSongsList() {
+        const container = document.getElementById('song-list-grid');
+        container.innerHTML = "";
+
+        songsData.forEach((song, index) => {
+            const badgeClass = song.difficulty === "Beginner" ? "badge-beginner" : song.difficulty === "Intermediate" ? "badge-intermediate" : "badge-advanced";
+            const diffLabel = translations[currentLocale][song.difficulty] || song.difficulty;
+            
+            const card = document.createElement('div');
+            card.className = 'song-card';
+            card.innerHTML = `
+                <div class="song-cover" style="background-image: url('${song.imgSrc}')"></div>
+                <div class="song-details">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <h4 class="song-title">${song.title}</h4>
+                        <span class="badge ${badgeClass}">${diffLabel}</span>
+                    </div>
+                    <p class="song-artist">${song.artist}</p>
+                </div>
+                <div style="padding: 20px; pt-0;">
+                    <button class="primary-btn" style="width:100%" onclick="startSongPractice(${index})">
+                        ${translations[currentLocale]["Practice"]}
+                    </button>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    // Video Modal Open / Close Controller
+    function openVideoModal(videoId, title) {
+        document.getElementById('modal-video-title').textContent = title;
+        document.getElementById('video-iframe').src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+        document.getElementById('modal-youtube-link').href = `https://www.youtube.com/watch?v=${videoId}`;
+        document.getElementById('video-modal').classList.add('active');
+    }
+
+    // Canvas Confetti Effect Generator
+    function triggerConfetti() {
+        const canvas = document.createElement('canvas');
+        canvas.id = 'confetti-canvas';
+        canvas.style.position = 'fixed';
+        canvas.style.top = '0';
+        canvas.style.left = '0';
+        canvas.style.width = '100vw';
+        canvas.style.height = '100vh';
+        canvas.style.pointerEvents = 'none';
+        canvas.style.zIndex = '9999';
+        document.body.appendChild(canvas);
+
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const colors = ['#f87171', '#fbbf24', '#34d399', '#60a5fa', '#c084fc', '#f472b6'];
+        const particles = [];
+
+        for (let i = 0; i < 150; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * -canvas.height - 20,
+                r: Math.random() * 6 + 4,
+                d: Math.random() * canvas.height,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                tilt: Math.random() * 10 - 5,
+                tiltAngleIncremental: Math.random() * 0.07 + 0.02,
+                tiltAngle: 0
+            });
+        }
+
+        let animationId;
+        let frames = 0;
+        
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            particles.forEach((p, idx) => {
+                p.tiltAngle += p.tiltAngleIncremental;
+                p.y += (Math.cos(p.d) + 3 + p.r / 2) / 2;
+                p.x += Math.sin(p.tiltAngle);
+                p.tilt = Math.sin(p.tiltAngle - idx / 3) * 15;
+
+                ctx.beginPath();
+                ctx.lineWidth = p.r;
+                ctx.strokeStyle = p.color;
+                ctx.moveTo(p.x + p.tilt + p.r / 2, p.y);
+                ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r / 2);
+                ctx.stroke();
+            });
+
+            frames++;
+            if (frames < 240) {
+                animationId = requestAnimationFrame(draw);
+            } else {
+                cancelAnimationFrame(animationId);
+                canvas.remove();
+            }
+        }
+
+        draw();
+    }
+
+    function closeVideoModal() {
+        document.getElementById('video-modal').classList.remove('active');
+        document.getElementById('video-iframe').src = "";
+    }
+
+    function closeModalOnOverlay(e) {
+        if (e.target.id === 'video-modal') {
+            closeVideoModal();
+        }
+    }
+
+    // Song Trainer Practice Mode logic
+    let activeSongIndex = null;
+    let activeNoteIndex = 0;
+
+    function startSongPractice(songIndex) {
+        activeSongIndex = songIndex;
+        activeNoteIndex = 0;
+
+        const song = songsData[songIndex];
+        
+        // Show trainer section
+        const trainer = document.getElementById('song-trainer');
+        trainer.classList.add('active');
+        document.getElementById('trainer-song-name').textContent = song.title;
+
+        // Populating note bubbles
+        const display = document.getElementById('note-display');
+        display.innerHTML = "";
+        
+        song.notes.forEach((note, index) => {
+            const bubble = document.createElement('div');
+            bubble.className = `note-bubble ${index === 0 ? 'highlighted' : ''}`;
+            bubble.id = `trainer-note-${index}`;
+            bubble.textContent = note;
+            display.appendChild(bubble);
+        });
+
+        // Switch to dashboard view to access virtual keyboard
+        switchPage('dashboard');
+
+        // Scroll trainer into view
+        trainer.scrollIntoView({ behavior: 'smooth' });
+
+        // Highlight the virtual keyboard key for the first note
+        highlightKeyOnPiano(song.notes[0]);
+    }
+
+    function closeTrainer() {
+        document.getElementById('song-trainer').classList.remove('active');
+        activeSongIndex = null;
+        activeNoteIndex = 0;
+        
+        // Remove virtual keyboard highlights
+        document.querySelectorAll('.white-key, .black-key').forEach(k => k.style.borderColor = '');
+    }
+
+    function checkTrainerNote(noteName) {
+        if (activeSongIndex === null) return;
+
+        const song = songsData[activeSongIndex];
+        const targetNote = song.notes[activeNoteIndex];
+
+        if (noteName === targetNote) {
+            // Note was played correctly!
+            const currentBubble = document.getElementById(`trainer-note-${activeNoteIndex}`);
+            if (currentBubble) {
+                currentBubble.classList.remove('highlighted');
+                currentBubble.classList.add('played');
+            }
+
+            activeNoteIndex++;
+
+            if (activeNoteIndex >= song.notes.length) {
+                // Completed song! Trigger Confetti!
+                triggerConfetti();
+                setTimeout(() => {
+                    alert(currentLocale === "en" ? "🎉 Excellent! You have completed the song lesson!" : "🎉 ഗംഭീരം! നിങ്ങൾ ഈ പാട്ട് വിജയകരമായി പൂർത്തിയാക്കി!");
+                    closeTrainer();
+                }, 300);
+            } else {
+                // Highlight next note
+                const nextBubble = document.getElementById(`trainer-note-${activeNoteIndex}`);
+                if (nextBubble) {
+                    nextBubble.classList.add('highlighted');
+                    // Scroll note display to keep active note visible
+                    nextBubble.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                }
+                
+                // Highlight corresponding piano key
+                highlightKeyOnPiano(song.notes[activeNoteIndex]);
+            }
+        }
+    }
+
+    // Helper to highlight targeted virtual key in trainer mode
+    function highlightKeyOnPiano(noteName) {
+        // Reset borders
+        document.querySelectorAll('.white-key, .black-key').forEach(k => {
+            k.style.borderColor = '';
+        });
+
+        const keyEl = document.getElementById(`dashboard-piano-${noteName}`);
+        if (keyEl) {
+            keyEl.style.borderColor = 'var(--accent)';
+        }
+    }
+
+    // Listen to computer keyboard presses
+    window.addEventListener('keydown', (e) => {
+        const key = e.key.toLowerCase();
+        if (keyboardMapping[key]) {
+            playSynthNote(keyboardMapping[key]);
+        }
+    });
+
+    // 4. Initial Bootstrap / Mount logic
+    window.onload = () => {
+        renderPiano("dashboard-piano");
+        renderYouTubeClasses();
+        renderSongsList();
+    };
+</script>
+
 </body>
 </html>
