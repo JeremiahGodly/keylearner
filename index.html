@@ -2110,9 +2110,8 @@
                 // Completed song! Trigger Confetti!
                 triggerConfetti();
                 setTimeout(() => {
-                    alert(currentLocale === "en" ? "🎉 Excellent! You have completed the song lesson!" : "🎉 ഗംഭീരം! നിങ്ങൾ ഈ പാട്ട് വിജയകരമായി പൂർത്തിയാക്കി!");
                     closeTrainer();
-                }, 300);
+                }, 1500);
             } else {
                 // Highlight next note
                 const nextBubble = document.getElementById(`trainer-note-${activeNoteIndex}`);
